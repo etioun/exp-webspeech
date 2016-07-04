@@ -1,0 +1,15 @@
+{
+  "title": "Salutations",
+  "dialog":
+    [
+      { "position": 0, "type": "DN", "body": "Salut, ça va ?"},
+      { "position": 1, "type": "DS", "body": "Oui, et toi ?", "activation" : ["oui et toi"]},
+      { "position": 2, "type": "DN", "body": "Oui, je vais bien"},
+      { "position": 3, "type": "DN", "body": "Tu peux aller acheter des pommes ?", "say": "Tu peu aller acheter des pommes ?"},
+      { "position": 4, "type": "DS", "body": "Oui, combien ?", "activation" : ["oui combien"]},
+      { "position": 5, "type": "DN", "body": "Quatre ou cinq"},
+      { "position": 6, "type": "DS", "body": "J'ai juste un billet de cents euros", "activation" : ["j'ai juste un billet de 100 €"]},
+      { "position": 7, "type": "DS", "body": "Donne-moi de la monnaie", "activation" : ["donne-moi de la monnaie"]},
+      { "position": 8, "type": "DN", "body": "Voila !"}
+    ]
+}
