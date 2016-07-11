@@ -2,16 +2,307 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Proto webspeech 2</title>
-    <link rel="stylesheet" type="text/css" href="css/control.css">
+    <title>Proto dialogue intéractif</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <!-- <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/fonts.css">
+    <link rel="stylesheet" type="text/css" href="css/animations.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script data-main="js/main" src="bower_components/requirejs/require.js"></script>
   </head>
   <body>
 
-  <section id="dialog">
-  </section>
+  <div id="user-console" style="display:none">
+    <div id="speechSynthesisNotSupported" >Your browser doesn't support speech synthesis, please use chrome</div>
+    <div id="speechRecognitionNotSupported" >Your browser doesn't support speech recognition, please use chrome</div>
+    <div id="restart" class="uiRestart" role="alert"><p>Recommencer <img class="restart" width="100px" src="img/restart.svg" /></p></div>
+    <div id="bien" class="uiGood" role="alert">Bien dit !!</div>
+    <div id="nothing" class="alert alert-warning uiError" role="alert">
+      <p style="color:rgb(30, 96, 152);">Désolé je n'ai rien entendu...
+      <span style="white-space:nowrap;"> Réessaye <img class="refresh" width="100px" src="img/refresh.svg" /> Ecoute les réponses  <img class="answers" width="100px" src="img/ear.svg" /> </span></p>
+      <!-- <p style="color:rgb(30, 96, 152);">ou écoute les réponses : </p> -->
+    </div>
+    <div id="processing" class="uiProcessing" role="alert">En cours d'analyse....</div>
+    <div id="sayIt" role="alert">
+      <p class="uiSayIt">
+      <strong>A toi de parler !</strong></p>
+    </div>
+    <div id="mistake1" class="alert alert-warning uiMistake" role="alert">
+      <p style="color:rgb(30, 96, 152);"><span>Ooops j'ai cru comprendre "<strong> transcript </strong>".</span> <span style="white-space:nowrap;"> Réessaye <img class="refresh" width="100px" src="img/refresh.svg" /> Ecoute les réponses  <img class="answers" width="100px" src="img/ear.svg" /> </span></p>
+    </div>
+    <div id="mistake2" class="alert alert-warning uiMistake" role="alert">
+      <p style="color:rgb(30, 96, 152);">Hmmm je ne suis pas vraiment sûr... <span style="white-space:nowrap;"> Réessaye <img class="refresh" width="100px" src="img/refresh.svg" /> Ecoute les réponses  <img class="answers" width="100px" src="img/ear.svg" /> </span></p>
+    </div>
+  </div>
 
+  <div id="impress" data-transition-duration="700">
+
+    <!-- Scene  -->
+    <img class="img-scene" src="img/scene.svg" />
+    <img class="img-france" src='img/france.svg' alt='Steren France clip art'/>
+
+    <!-- Steps -->
+    <div id="first"  class="step"
+      data-x="0" data-y="-50" data-scale="1">
+      <p  class="align-left">Cette app est une expérimentation. Elle fonctionne avec Chrome sur PC et Mac (et partiellement sur tablettes android)</p>
+      <p  class="align-left"><a href="#second" >Clique ici pour commencer</a></p>
+    </div>
+
+    <div id="second"  class="step"
+      data-x="150" data-y="430" data-scale="0.1">
+      <h1 data-next="default" class="tts align-left">- Bonjour, voici une petite présentation intéractive. </h1>
+    </div>
+
+    <div  class="step"
+      data-x="150" data-y="450" data-scale="0.1">
+      <h1 data-next="default" data-ui="up-right" class="tts align-left">- Ça va ?</h1>
+    </div>
+
+    <div  class="step "
+      data-x="150" data-y="480" data-scale="0.1">
+      <h1 data-next="default" data-stt="oui ça va" class="stt align-right"> Oui, ça va !</h1>
+    </div>
+
+    <div  class="step "
+      data-x="150" data-y="530" data-scale="0.1">
+      <h1 data-next="default" class="tts align-left">- Comme tu as pu remarquer, tu peux intéragir en parlant dans le micro.</h1>
+    </div>
+
+    <div  class="step "
+      data-x="150" data-y="560" data-scale="0.1">
+      <h1 data-next="default" class="tts align-left">- Allez, commençons par un petit voyage.</h1>
+    </div>
+
+    <div  class="step "
+      data-x="150" data-y="590" data-scale="0.1">
+      <h1 data-next="default" class="tts align-left">- Prends ton sac, on y va !</h1>
+    </div>
+
+    <div id="pret" class="step "
+      data-x="150" data-y="610" data-scale="0.1">
+      <div class="align-right">
+        <h1 data-next="emmenemoi" data-stt="je suis prêt|je suis près" class="stt ">Je suis prêt !</h1>
+        <h1 data-next="jetattends" data-stt="donne-moi 30 secondes" class="stt">Donne-moi 30 secondes !</h1>
+      </div>
+    </div>
+
+    <div  id="jetattends" class="step disapear"
+      data-x="150" data-y="630" data-scale="0.1" >
+      <h1 data-next="defaut" class="tts align-left">Ok, je t'attends... </h1>
+    </div>
+
+    <div class="step disapear"
+      data-x="150" data-y="630" data-scale="0.1" >
+      <h1 class="tts center-text">- 1...</h1>
+      <h1 class="tts center-text">- 2...</h1>
+      <h1 class="tts center-text">- 3...</h1>
+      <h1 data-next="defaut"  class="tts center-text">- 28 29 30 !</h1>
+
+    </div>
+
+    <div  class="step disapear"
+      data-x="150" data-y="630" data-scale="0.1" >
+      <h1 data-next="pret"  class="tts center-text">- Tu es prêt ? </h1>
+    </div>
+
+
+    <div  id="emmenemoi"class="step" style="margin-top:100px; margin-left:0px"
+      data-x="1200" data-y="500" data-z="150" data-scale="0.7">
+      <h1 style="color: #EAF4FD;" class="tts center-text">Super, choisis entre Bordeaux et Paris :</h1>
+      <h1 data-next="paris" data-stt="emmène-moi à Paris" class="stt center-text">Emmène-moi à Paris !</h1>
+      <h1 data-next="bordeaux" data-stt="emmène-moi à Bordeaux" class="stt center-text">Emmène-moi à Bordeaux !</h1>
+    </div>
+
+    <div id="paris" class="step green"
+      data-x="913" data-y="366" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <img class="paris" src="img/paris.jpg" />
+      <h1 class="tts center-text">- Et voila !</h1>
+      <h1 data-next="default" class="tts center-text">- Bienvenue à Paris !</h1>
+    </div>
+
+     <div class="step green"
+      data-x="913" data-y="396" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <img class="amour" src="img/amour.jpg" />
+      <h1 data-next="default" class="tts center-text">- Capitale de l'amour...</h1>
+    </div>
+
+    <div  class="step green"
+      data-x="913" data-y="416" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 class="tts center-text">- Capitale de...</h1>
+      <h1 data-next="default" data-stt="oui oui je connais la chanson" class="stt center-text">Oui, oui... Je connais la chanson...</h1>
+    </div>
+
+    <div  class="step green"
+      data-x="913" data-y="450" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-next="trainparisbordeaux" data-stt="maintenant emmène-moi à Bordeaux s'il te plaît" class="stt center-text">Maintenant, emmène-moi à Bordeaux, s'il te plait !</h1>
+      <h1 data-next="cataplu" data-stt="j'ai suffisamment voyagé merci|c'est suffisamment voyager merci" class="stt center-text">J'ai suffisamment voyagé, merci !</h1>
+    </div>
+
+    <div id="trainparisbordeaux" class="step disapear"
+      data-x="900" data-y="450" data-z="0" data-scale="0.4" data-delay="1500" data-next="bordeaux">
+      <img class="paris-bordeaux" width="60px" src='img/van.svg' />
+    </div>
+
+    <div id="bordeaux" class="step orange"
+      data-x="850" data-y="484" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-next="default" class="tts center-text">- Bienvenue à Bordeaux !</h1>
+    </div>
+
+    <div id="" class="step orange"
+      data-x="850" data-y="510" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <img class="vignes" src="img/vignes.jpg"/>
+      <img class="bouteille" src="img/bouteille.png"/>
+      <h1  data-next="default" class="tts center-text">- On y trouve du bon vin...</h1>
+    </div>
+
+    <div id="" class="step orange"
+      data-x="850" data-y="540" data-z="-200" data-scale="0.05" data-rotate-z="0" data-delay="1000">
+      <img class="pibales" src="img/pibales.jpg"/>
+      <img class="lamproie" src="img/lamproie.jpg"/>
+      <h1 data-next="default" class="tts center-text">- et des bons poissons...</h1>
+    </div>
+
+    <div id="" class="step orange"
+      data-x="850" data-y="570" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-say="sa se mange ?" data-stt="ça ce mange|ça se mange" class="stt center-text">Ça se mange ?? </h1>
+    </div>
+
+    <div id="" class="step orange"
+      data-x="850" data-y="580" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-say="ça ne me donne pas du tou envie" data-stt="ça ne me donne pas du tout envie|elle ne donne pas du tout envie|agenda donne pas du tout envie" class="stt center-text">Ça ne me donne pas du tout envie....</h1>
+    </div>
+
+    <div id="" class="step orange"
+      data-x="850" data-y="590" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-next="default" class="tts center-text">Miam, moi je vais en reprendre !</h1>
+    </div>
+
+    <div  class="step orange"
+      data-x="850" data-y="620" data-z="-200" data-scale="0.05" data-rotate-z="0">
+      <h1 data-next="trainbordeauxparis" data-stt="maintenant emmène-moi à Paris s'il te plaît" class="stt center-text">Maintenant, emmène-moi à Paris, s'il te plait !</h1>
+      <h1 data-next="cataplu" data-stt="j'ai suffisamment voyagé merci|c'est suffisamment voyager merci" class="stt center-text">J'ai suffisamment voyagé, merci !</h1>
+    </div>
+
+    <div id="trainbordeauxparis" class="step "
+      data-x="900" data-y="450" data-z="0" data-scale="0.4" data-delay="1500" data-next="paris">
+      <img class="bordeaux-paris" width="60px" src='img/van.svg' />
+      <h1 data-next="paris" ></h1>
+    </div>
+
+
+    <div  id="cataplu" class="step "
+      data-x="340" data-y="424" data-scale="0.1">
+      <h1 data-next="default" data-say="alors, ça t'a plu ?" class="tts center-text">- Alors ça t'a plu ?</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="340" data-y="444" data-scale="0.1">
+      <h1 data-next="default" data-say="c'est sympa; comment tu fais ?" data-stt="c'est sympa comment tu sais|c'est sympa comment tu fais" class="stt center-text">C'est sympa ! Comment tu fais ?</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="340" data-y="464" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text">J'utilise :</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="400" data-y="483" data-rotate-Z="26" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text">impress.js</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="411" data-y="540" data-rotate-Z="132" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text">l'API web speech</h1>
+    </div>
+    <div  class="step  "
+      data-x="273" data-y="522" data-rotate-Z="270" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text"> et les outils classiques du web</h1>
+    </div>
+    <div  class="step  "
+      data-x="340" data-y="510" data-rotate-Z="360" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text"> Par conséquent, je peux aussi intégrer plein de ressources du web dans ma présentation.</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="340" data-y="570" data-scale="0.1">
+      <h1 data-next="default" data-stt="j'ai la tête qui tourne" class="stt center-text"> J'ai la tête qui tourne !</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="340" data-y="590" data-scale="0.1">
+      <h1 data-next="default" data-stt="mais concrètement à quoi ça peut servir tout ça" class="stt center-text"> Mais concrètement, à quoi ça peut servir tout ça ?</h1>
+    </div>
+
+    <div  class="step disapear "
+      data-x="340" data-y="620" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text">- Et bien, par exemple, tu peux utiliser ce système pour des exercices d'orthophonie, ou un cours de langue !</h1>
+    </div>
+
+    <div  class="step disapear "
+      data-x="340" data-y="620" data-scale="0.1">
+      <h1 data-next="default" data-stt="en faisant travailler la prononciation"class="stt center-text">En faisant travailler la prononciation ?</h1>
+    </div>
+
+    <div  class="step disapear "
+      data-x="340" data-y="620" data-scale="0.1">
+      <h1 data-next="default" class="tts center-text">- Exactement !</h1>
+    </div>
+
+
+
+    <div  class="step  "
+      data-x="330" data-y="700" data-scale="0.12" data-rotate-z="-65">
+      <h1 data-next="default" class="tts center-text">Tu peux aussi présenter des informations</h1>
+    </div>
+
+    <div  class="step  "
+      data-x="400" data-y="800"  data-z="100" data-scale="0.4" data-rotate-z="0">
+      <h1 data-next="default" class="tts center-text">dans leur contexte.</h1>
+    </div>
+
+    <div  class="step disapear "
+      data-x="812" data-y="721" data-scale="0.3" >
+      <h1 data-next="default" class="tts center-text">Proposer des activités intéractives, ludiques et diversifiées...</h1>
+    </div>
+
+    <div  class="step  disapear"
+      data-x="812" data-y="721" data-scale="0.3" >
+      <h1  data-say="Petit exemple, remets les mots dans le bon ordre, je t'écoute" class="tts center-text">Exemple #1 : Remets les mots dans le bon ordre, je t'écoute :</h1>
+      <h1  data-next="default" data-say="les lunettes sont sur le livre vert" data-stt="les lunettes sont sur le livre vert" class="stt center-text">livre / sur / vert / le / sont / lunettes / les </h1>
+    </div>
+
+    <div id="exemple2" class="step "
+      data-x="545" data-y="450" data-scale="0.1">
+    <h1  data-say="Autre exemple, une activité venant d'un autre site" class="tts center-text">Exemple #2 : Activité venant d'un autre site</h1>
+    <iframe src="//LearningApps.org/watch?app=1945924" style="border:0px;width:100%;height:400px" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+    <p data-next="default" class="center-text"><a style="color:#A94442;" href="#exemple3" >Clique ici pour continuer la présentation</a></p>
+    </div>
+
+    <div id="exemple3" class="step center-text"
+      data-x="545" data-y="550" data-scale="0.1">
+      <h1  data-say="Une vidéo youtube" class="tts center-text">Exemple #3 : Une vidéo youtube...</h1>
+      <h1  data-say="j'adore le cri du lapin, et toi ?" class="tts center-text"></h1>
+      <iframe width="500" height="400" src="https://www.youtube.com/embed/H1Mgf8ow-vI" frameborder="0" allowfullscreen></iframe>
+      <p data-next="default" class="center-text"><a style="color:#A94442;" href="#fin" >Clique ici pour continuer la présentation</a></p>
+    </div>
+
+    <div id="fin" class="step disapear"
+      data-x="812" data-y="139" data-scale="0.4">
+      <h1 data-next="default" data-say="Bref, tout est là pour créer un contenu intéractif, et immersif"class="tts center-text">Bref, tout est là pour créer un contenu intéractif et immersif </h1>
+    </div>
+
+    <div  class="step disapear"
+      data-x="812" data-y="139" data-scale="0.4" >
+      <h1  data-next="default" data-say="en jouant avec la vision, l'écoute, et la voix" class="tts center-text">en jouant avec la vision, l'écoute et la voix !</h1>
+    </div>
+
+    <div id="index" class="step"
+      data-x="500" data-y="500" data-z="0" data-scale="1.3">
+      <h1 data-say="Au revoir, et à bientôt j'espère !" data-ui="up-right" class="tts align-left"></h1>
+    </div>
+  </div>
   <script>
+
 
   </script>
   </body>

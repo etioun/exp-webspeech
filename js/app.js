@@ -1,82 +1,121 @@
 // Filename: app.js
 define([
   'jquery',
-  'underscore',
-  'backbone',
-  'speechRecognition',
   'speechSynth',
-  'dialogReader',
-  'views/dialog',
-], function($, _, Backbone, SpeechRecognition, SpeechSynth, DialogReader, DialogView){
+  'speechRecognition',
+  'speechRecorder',
+  'views/userConsole',
+  'slideLogic/default'
+], function($, SpeechSynth,SpeechRecognition, SpeechRecorder, UserConsoleView, DefaultLogic){
+
+  var lastEntered = null;
+
+  var toBeReloaded = false;
 
   var initialize = function(){
 
-    // Pass in our Router module and call it's initialize function
-    //Router.initialize();
-    if (!('webkitSpeechRecognition' in window) ) {
-        $("body").append("<p>web speech API not available, please use chrome browser</p>");
-    } else {
+    $(document).on('impress:stepenter', function (event) {
 
-      SpeechRecognition.init({
-        "lang": "fr-fr",
-        onResult: function(result) {
-          console.log(result.transcript );
-          var transcript = $.trim(result.transcript);
-          var idCommand = getCommand(transcript);
-          if (idCommand) {
-            actives = Controls.active();
-            actives.forEach(function (control) { control.set('active', false); });
-            activated = Controls.where({code: idCommand});
-            activated.forEach(function (control) { control.set('active', true); });
-          }
-        }});
+      if (toBeReloaded) {
+        window.location.reload(true);
+        return;
+      }
 
-      SpeechSynth.init({"lang": "fr-fr"});
+      var target = $(event.target);
+      lastEntered = target;
 
-      DialogView = new DialogView();
-      DialogView.render();
+      //Call init slide
+      DefaultLogic.enterSlide(event);
 
-      DialogReader.on('nextSentence', function (Sentence) {
-        if (Sentence.get('type') == "DN") {
-          if (Sentence.say) {
-            SpeechSynth.say(Sentence.get('say'));
-          } else {
-            SpeechSynth.say(Sentence.get('body'));
-          }
+      //Perform slide logic
 
-          SpeechSynth.waitTillSilent(function () { DialogReader.nextSentence(); } );
-
-        } else if (Sentence.get('type') == "DS") {
-
-          SpeechSynth.waitTillSilent(function () {
-
-            SpeechRecognition.start();
-
-            SpeechRecognition.onResult(function(result) {
-              console.log(result.transcript );
-              //Check match
-              var isMatch = Sentence.get('activation').some( function (e) {
-                return $.trim(result.transcript) == e;
-              });
-
-              if (isMatch)
-              {
-                SpeechRecognition.stop(function () {
-                  Sentence.set('done', true);
-                  DialogReader.nextSentence();
-                });
-              }
-            })
-          })
+      if (target[0].id == "index") {
+        UserConsoleView.showRestart();
+      } else if (target[0].id == "first"){
+        if (!('webkitSpeechRecognition' in window)) {
+          UserConsoleView.showSpeechRecognitionNotSupported();
         }
-      })
 
-      $.getJSON('data/dialog1FR.json', function (data) {
-        DialogReader.init({ "dialog" : data});
-        DialogReader.nextSentence();
+        if (!('speechSynthesis' in window)) {
+          UserConsoleView.showSpeechSynthesisNotSupported();
+        };
+      }
+      DefaultLogic.perform(target, function (next){
+        if ($('#'+next).length === 0) {
+          nextStep(target);
+        } else {
+          if (target == lastEntered) {
+            impress().goto($('#'+next)[0]);
+          }
+        }
       });
+
+    });
+
+    $(document).on('impress:stepleave', function (event) {
+      //call terminate slide
+      DefaultLogic.leaveSlide(event);
+    });
+
+    SpeechSynth.init();
+    SpeechRecognition.init();
+
+    var ua = navigator.userAgent.toLowerCase();
+    if ( ua.search(/(android)/) === -1 ) {
+      SpeechRecorder.init();
     }
+    // SpeechRecorder.init();
+
+    UserConsoleView.on('reloadSlide', function() {
+      // window.location.reload();
+      impress().goto(lastEntered[0]);
+    })
+
+    UserConsoleView.on('restart', function() {
+      impress().goto($('#first')[0]);
+      toBeReloaded = true;
+    })
+
+    UserConsoleView.on('playAnswers', function() {
+      SpeechSynth.cancel();
+
+      var stuffToSay = lastEntered.find('.stt');
+
+      if (stuffToSay.length == 1) {
+        var v = lastEntered.find('.stt')[0];
+        if (v.dataset.say) {
+          SpeechSynth.say(v.dataset.say);
+        } else {
+          SpeechSynth.say(v.innerHTML);
+        }
+      } else {
+        $.each(lastEntered.find('.stt'),function(i, v){
+
+          SpeechSynth.say("Réponse "+ (i+1) + " : ");
+
+          if (v.dataset.say) {
+            SpeechSynth.say(v.dataset.say);
+          } else {
+            SpeechSynth.say(v.innerHTML);
+          }
+        });
+      }
+    })
+
+    impress().init();
+    $('#impress').show();
+
+    document.consoleAccess = {
+      mockSpeech: SpeechRecognition.mockSpeech,
+      noTTS : false
+    };
   };
+
+  var nextStep = function(currentStep) {
+    if (currentStep == lastEntered) {
+      impress().next();
+    }
+  }
 
   return {
     initialize: initialize

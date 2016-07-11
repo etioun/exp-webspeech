@@ -1,0 +1,313 @@
+
+/*global stuff*/
+body, h1, p {
+  color: white;
+}
+
+body, p {
+  font-family: 'Lato';
+  font-weight: 400;
+}
+
+body {
+  transition: 0.5s;
+  background-color:rgb(151, 188, 180)
+}
+
+div, p, canvas, i, em {
+  transition: 1s
+}
+
+h1 {
+  font-family: 'Patua One';
+  font-size: 80px;
+  text-shadow: 0px 7px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+#user-console {
+  position: fixed;
+  z-index: 10000000;
+  width: 100%;
+  margin-top: 7%;
+}
+
+#impress {
+  display: none;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.align-left {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.align-right {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.white, .white h1, .white p {
+  color: black;
+  text-shadow: none;
+}
+
+.gray-bg {
+  background-color: gray;
+}
+
+.red-bg {
+  background-color: rgb(255, 68, 68);
+}
+
+.orange-bg {
+  background-color: rgb(255, 187, 51);
+}
+
+.green-bg {
+  background-color: rgb(153, 204, 0);
+}
+
+.purple-bg {
+  background-color: rgb(170, 102, 204);
+}
+
+.blue-bg {
+  background-color: rgb(51, 181, 229);
+}
+
+.step {
+  width: 1100px;
+  padding: 0px;
+  font-size: 48px;
+}
+
+.step:not(.active) {
+  opacity: 0.1;
+}
+
+.step:hover {
+  opacity: 1;
+}
+
+.step:not(.active).disapear {
+  display: none;
+}
+
+.stt {
+  text-shadow: #70B713 0 0 30px, #037721 5px 5px 5px;
+}
+
+
+.stt::before {
+  background-size: 40px 40px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 20px;
+  content:"";
+}
+
+.active .stt::before,
+.present .stt::before {
+  background-image: url("/img/recording.ai.svg");
+
+  animation: pulse 1s linear infinite;
+}
+
+/*scene*/
+.img-france {
+  position: absolute;
+  transform: translate3d(650px,190px, 0px) scale(0.5);
+  background-color: white;
+  width: 500px;
+}
+.img-scene {
+  position: absolute;
+  transform : translate3d(-1000px,-1000px, 0px) scale(0.33);
+  width: 3000px;
+
+}
+
+/*slides*/
+.step > .paris-bordeaux {
+  position: absolute;
+  left: 560px;
+  top: -180px;
+  color: #25211B;
+  transition: 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: 0.5s;
+}
+
+
+/*.step.past > .paris-bordeaux,*/
+.step.present > .paris-bordeaux {
+  transform: translate(-150px, 250px);
+}
+
+
+.step > .bordeaux-paris {
+  position: absolute;
+  left: 400px;
+  top: 100px;
+  color: #25211B;
+  transition: 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: 0.5s;
+  transform: scaleX(-1);
+}
+
+.step.present > .bordeaux-paris {
+  transform: translate(170px, -250px) scaleX(-1);
+}
+
+.vignes {
+  visibility: : hidden;
+  position: absolute;
+  width: 500px;
+  top:-200px;
+  left: 0;
+  z-index: -1;
+  transition: 15s linear;
+}
+
+.step.present > .vignes {
+  visibility: : visible;
+  transform : translate(800px, 600px);
+}
+
+.bouteille {
+  visibility: : hidden;
+  position: absolute;
+  width: 500px;
+  top:100px;
+  left: 500px;
+  z-index: -1;
+  transition: 15s linear;
+}
+
+.step.present > .bouteille {
+  visibility: : visible;
+  transform : translate(500px, -600px);
+}
+
+.pibales {
+  visibility: : hidden;
+  position: absolute;
+  width: 500px;
+  top:-200px;
+  left: 0;
+  z-index: -1;
+  transition: 10s linear;
+}
+
+.step.present > .pibales {
+  visibility: : visible;
+  transform : translate(500px, 0px);
+}
+
+.lamproie {
+  visibility: : hidden;
+  position: absolute;
+  width: 500px;
+  top:100px;
+  left: 500px;
+  z-index: -1;
+  transition: 10s linear;
+}
+
+.step.present > .lamproie {
+  visibility: : visible;
+  transform : translate(-500px, 0px);
+}
+
+ .paris {
+  position: absolute;
+  width: 1000px;
+  top: -200px;
+  left: 0;
+  z-index: -1;
+}
+
+ .amour {
+  position: absolute;
+  width: 1000px;
+  top: -200px;
+  left: 0;
+  z-index: -1;
+}
+
+
+/*console*/
+.uiSayIt {
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 80px;
+  text-align: center;
+  color: #1E6098;
+  animation: blinking 3s linear infinite;
+  opacity: 0.8;
+}
+
+.uiGood {
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 80px;
+  text-align: center;
+  color: #1E6098;
+  animation: superscale 1s linear;
+
+}
+
+.uiProcessing {
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 80px;
+  text-align: center;
+  color: #1E6098;
+  opacity: 0.7;
+
+}
+
+.uiError {
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 30px;
+  text-align: center;
+  color: #1E6098;
+  opacity: 0.7;
+}
+
+.uiMistake {
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 30px;
+  text-align: center;
+  color: #1E6098;
+  opacity: 0.7;
+
+}
+
+.uiRestart {
+  margin-left: 50px;
+  font-family: "Lato";
+  font-style: italic;
+  font-size: 30px;
+  text-align: center;
+  opacity: 1;
+  width: 200px;
+  transform: rotateZ(-30deg);
+  animation: pulseRotated 1.2s linear infinite;
+}
